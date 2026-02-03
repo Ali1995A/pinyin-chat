@@ -78,7 +78,14 @@ module.exports = async (req, res) => {
   if (stream) body.stream = true;
 
   const controller = new AbortController();
-  req.on("close", () => controller.abort());
+  const abortUpstream = () => {
+    if (!controller.signal.aborted) controller.abort();
+  };
+  // Only abort when the client actually aborts/disconnects early.
+  req.on("aborted", abortUpstream);
+  res.on("close", () => {
+    if (!res.writableEnded) abortUpstream();
+  });
 
   let upstreamRes;
   let upstreamJson;
