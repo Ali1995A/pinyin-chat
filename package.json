@@ -1,0 +1,12 @@
+{
+  "name": "pinyin-father-chat",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Single-page chat UI with pinyin/hanzi aligned rendering + DeepSeek proxy (Vercel-friendly).",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js",
+    "smoke:real": "node scripts/smoke-real-api.js"
+  }
+}
+

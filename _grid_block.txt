@@ -1,0 +1,88 @@
+    <div class="grid">
+      <div class="card">
+        <div class="hd">
+          <h2>输入</h2>
+          <div class="small">孩子信息 + 孩子的话</div>
+        </div>
+        <div class="bd">
+          <div class="row two">
+            <div>
+              <label for="childName">孩子名字</label>
+              <input id="childName" placeholder="例如：小宇" />
+            </div>
+            <div>
+              <label for="childAge">年龄</label>
+              <input id="childAge" inputmode="numeric" placeholder="例如：6" />
+            </div>
+          </div>
+
+          <label for="childTraits">性格/近况（可选）</label>
+          <textarea id="childTraits" placeholder="例如：最近有点焦虑，喜欢恐龙，怕黑…"></textarea>
+
+          <label for="childMessage">孩子对爸爸说的话</label>
+          <textarea id="childMessage" placeholder="例如：爸爸，我今天在幼儿园被同学抢玩具了，我很生气。"></textarea>
+
+          <div class="sep"></div>
+
+          <div class="row two">
+            <div>
+              <label for="endpoint">服务地址（来自 .env）</label>
+              <input id="endpoint" value="（未连接本地服务）" disabled />
+            </div>
+            <div>
+              <label for="model">模型（来自 .env）</label>
+              <input id="model" value="（未连接本地服务）" disabled />
+            </div>
+          </div>
+
+          <div class="hint">
+            现在不在网页里填 Key：请在同目录创建 <span class="mono">.env</span>（参考 <span class="mono">.env.example</span>），并用 <span class="mono">node server.js</span> 启动本地服务。
+          </div>
+
+          <div class="row two">
+            <div>
+              <label for="temperature">温度</label>
+              <select id="temperature">
+                <option value="0.2">0.2（更稳定）</option>
+                <option value="0.6" selected>0.6（更自然）</option>
+                <option value="0.9">0.9（更有创意）</option>
+              </select>
+            </div>
+            <div>
+              <label for="maxTokens">最大 tokens（可选）</label>
+              <input id="maxTokens" inputmode="numeric" placeholder="例如：600" />
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="primary" id="btnGenerate">生成爸爸回复</button>
+            <button id="btnClear">清空</button>
+          </div>
+
+          <div id="err" class="danger" style="display:none"></div>
+          <div class="hint">
+            验收点：任何设备上，拼音里的 <span class="mono">a</span> 都是 <span class="mono">ɑ</span>；带声调的 <span class="mono">ā/á/ǎ/à</span> 会显示为 <span class="mono">ɑ̄/ɑ́/ɑ̌/ɑ̀</span>（组合声调）。
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="hd">
+          <h2>输出</h2>
+          <div class="small">可复制 / 可重排</div>
+        </div>
+        <div class="outputWrap">
+          <div class="outputHeader">
+            <div class="meta" id="meta">等待生成…</div>
+            <div class="actions" style="margin:0">
+              <button id="btnCopy">复制为纯文本（拼音行 + 汉字行）</button>
+            </div>
+          </div>
+          <div class="output" id="output" aria-live="polite"></div>
+          <div class="hint">
+            说明：页面先生成中文回复，再逐字转拼音并做 <span class="mono">NFD + a→ɑ</span> 规范化，然后以“拼音在上/汉字在下”逐字对齐渲染。
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
