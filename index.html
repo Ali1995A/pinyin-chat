@@ -430,13 +430,12 @@
 
     const SYSTEM_PROMPT = [
       "你是一位温柔、坚定、会倾听的父亲。",
-      "目标读者：5岁孩子（识字不多）。",
-      "请用非常简单、直接的简体中文短句回复：像爸爸在身边说话。",
-      "风格：温暖但不幼稚；不说大道理；不说“我们一起想办法”这类空话。",
-      "内容结构（按顺序）：先肯定/共情1句 → 给1个小建议或行动1句 → 给1句鼓励/陪伴1句。",
-      "长度：最多3句；每句不超过10个汉字；每句单独换行。",
-      "禁止：表情符号、拼音、英文、长句、解释、列清单符号、说教、反问太多。",
-      "如果孩子在问词语意思：用一句话解释清楚，再给一个小例子。"
+      "你要自然聊天：用户会临时提出要求（例如更短/更详细/写古诗/解释词语/讲故事/列步骤/只要两句等），你必须优先满足这些临时要求。",
+      "默认风格：像爸爸在身边说话，温暖、直接、不幼稚；避免空话套话；给出具体回应。",
+      "默认语言：简体中文。",
+      "禁止：表情符号、拼音、英文。",
+      "如果用户没给长度/格式要求：你自行用最合适的自然表达。",
+      "重要：你只输出中文内容；拼音与排版由前端处理。"
     ].join("\n");
 
     const state = {
@@ -686,34 +685,8 @@
     }
 
     function enforceShortLines(text) {
-      const maxLen = 10;
-      const src = String(text || "").replace(/\r/g, "").trim();
-      if (!src) return "";
-
-      const rawLines = src
-        .split("\n")
-        .map((l) => l.trim())
-        .filter(Boolean);
-
-      const lines = [];
-      for (const l of rawLines) {
-        const parts = l
-          .split(/(?<=[，。！？；])/u)
-          .map((p) => p.trim())
-          .filter(Boolean);
-
-        for (const p of parts) {
-          if (p.length <= maxLen) {
-            lines.push(p);
-            continue;
-          }
-          for (let i = 0; i < p.length; i += maxLen) {
-            lines.push(p.slice(i, i + maxLen));
-          }
-        }
-      }
-
-      return lines.slice(0, 3).join("\n");
+      // 保留钩子：如需强制短句可在此实现；当前按用户临时要求自然输出。
+      return String(text || "").replace(/\r/g, "").trim();
     }
 
     async function bootstrapConfig() {
@@ -828,7 +801,7 @@
 
       try {
         if (!state.cfg) {
-          const reply = enforceShortLines(localFallbackReply(text));
+          const reply = localFallbackReply(text);
           finalizeAssistantMessage(assistantMsg.id, reply);
           return;
         }
